@@ -1,0 +1,57 @@
+import random
+
+def generate_lottery_numbers():
+    """
+    Generates a set of 6 unique random numbers in the range 1 to 49.
+    """
+    return set(random.sample(range(1, 50), 6))
+
+def determine_winnings(match_count):
+    """
+    Determines winnings based on the number of matching numbers.
+    """
+    prizes = {
+        6: "Jackpot! You win 1,000,000 dollars!",
+        5: "Great! You win $10,000!",
+        4: "Good job! You win $1,000!",
+        3: "Not bad! You win $100!",
+    }
+    # For 0, 1, 2 matches, or any other case not listed, the user wins nothing.
+    return prizes.get(match_count, "No prize. Better luck next time!")
+
+def lottery_game(user_numbers):
+    """
+    Compares the user's chosen numbers with the randomly generated lottery numbers.
+    Utilizes set intersection to determine matching numbers and calculates winnings.
+    """
+    lottery_numbers = generate_lottery_numbers()
+    matches = user_numbers.intersection(lottery_numbers)
+    match_count = len(matches)
+    winnings = determine_winnings(match_count)
+    return lottery_numbers, matches, match_count, winnings
+
+# --- Main code execution ---
+# This block lets the user input 6 unique numbers between 1 and 49.
+while True:
+    try:
+        user_input = input("Enter 6 unique numbers between 1 and 49 separated by spaces: ")
+        # Convert input string to a set of integers
+        user_numbers = set(map(int, user_input.split()))
+        if len(user_numbers) != 6:
+            raise ValueError("You must enter exactly 6 unique numbers.")
+        if not all(1 <= num <= 49 for num in user_numbers):
+            raise ValueError("All numbers must be between 1 and 49.")
+        break
+    except ValueError as e:
+        print("Error:", e)
+        print("Please try again.\n")
+
+# Run the lottery game
+lottery_numbers, matches, match_count, winnings = lottery_game(user_numbers)
+
+# Display the results
+print("\nYour numbers:      ", sorted(user_numbers))
+print("Lottery numbers:   ", sorted(lottery_numbers))
+print("Matching numbers:  ", sorted(matches))
+print(f"Number of matches: {match_count}")
+print(winnings)
